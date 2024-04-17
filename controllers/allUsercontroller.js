@@ -2,7 +2,16 @@ const express = require('express')
 const Customer = require("../models/customerSchema");
 const moment = require("moment"); // require Moment
 
+const user_welcome_get=(req,res) => {
+    res.render("welcome")
+}
 
+const user_login_get=(req,res) => {
+    res.render("auth/login")
+}
+const user_signup_get=(req,res) => {
+    res.render("auth/signup")
+}
 const user_index_get=(req, res) => {
     Customer.find()
     .then((result) => {
@@ -15,7 +24,7 @@ const user_index_get=(req, res) => {
 const user_add_post=(req, res) => {
     Customer.create(req.body)
         .then(() => {
-        res.redirect("/");
+        res.redirect("/home");
         })
         .catch((error) => {
         console.log(error);
@@ -36,7 +45,7 @@ const user_edit_get=(req, res) => {
 const user_edit_put=(req, res) => {
     Customer.updateOne({ _id: req.params.id }, req.body)
     .then((params) => {
-    res.redirect("/");
+    res.redirect("/home");
     })
     .catch((error) => {
     console.log(error);
@@ -65,7 +74,7 @@ const user_view_get= (req, res) => {
 const user_delete=(req, res) => {
     Customer.deleteOne({ _id: req.params.id })
     .then(() => {
-        res.redirect("/");
+        res.redirect("/home");
     })
     .catch((error) => {
     console.log(error);
@@ -80,5 +89,8 @@ module.exports = {
     user_search_post,
     user_index_get,
     user_view_get,
-    user_delete
+    user_delete,
+    user_welcome_get,
+    user_login_get,
+    user_signup_get,
 };
