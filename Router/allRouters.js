@@ -2,13 +2,11 @@ const express = require('express')
 const router = express.Router()
 const userController=require("../controllers/allUsercontroller")
 
-
-
 router.get("/",userController.user_welcome_get);
-router.get("/login",userController.user_login_get);
-router.get("/signup",userController.user_signup_get);
 
-//level 1
+router.get("/login",userController.user_login_get);
+
+router.get("/signup",userController.user_signup_get);
 
 router.get("/home", userController.user_index_get);
 
