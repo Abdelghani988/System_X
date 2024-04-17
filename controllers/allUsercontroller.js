@@ -3,6 +3,15 @@ const Customer = require("../models/customerSchema");
 const moment = require("moment"); // require Moment
 
 
+const user_index_get=(req, res) => {
+    Customer.find()
+    .then((result) => {
+        res.render("index", { arr: result, moment: moment });}) // Render the Home page after fetching the data
+    .catch((error) => {
+        console.log(error);
+        res.render("error", { error: error });
+    });
+}
 const user_add_post=(req, res) => {
     Customer.create(req.body)
         .then(() => {
@@ -43,15 +52,6 @@ const user_search_post=(req, res) => {
         .catch((error) => {
         console.log(error)
         })
-}
-const user_index_get=(req, res) => {
-    Customer.find()
-    .then((result) => {
-        res.render("index", { arr: result, moment: moment });}) // Render the Home page after fetching the data
-    .catch((error) => {
-        console.log(error);
-        res.render("error", { error: error });
-    });
 }
 const user_view_get= (req, res) => {
     Customer.findById(req.params.id)
