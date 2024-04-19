@@ -125,16 +125,16 @@ body {
         <h1>
             Sign up
         </h1>
-        <form class="text-start mx-auto  mt-5 " style="max-width: 22em;;">
+        <form action="/signup"  method="post" class="text-start mx-auto  mt-5 " style="max-width: 22em;;">
 
             <div class="mb-3">
                 <label for="exampleInputEmail1"
                 class="form-label">
                 Username:</label>
-                <input type="email" 
+                <input type="text" 
                 class="form-control" 
                 id="exampleInputUsername" 
-                aria-describedby="emailHelp">
+                name="username"
                 </div>
 
                 
@@ -145,7 +145,7 @@ body {
                 <input type="email" 
                 class="form-control" 
                 id="exampleInputEmail1" 
-                aria-describedby="emailHelp">
+                name="email"
                 </div>
 
 
@@ -156,7 +156,8 @@ body {
                 >Password:</label>
                 <input type="password" 
                 class="form-control"
-                id="exampleInputPassword1">
+                id="exampleInputPassword1"
+                name="Password"
                 </div>
 
                 

@@ -125,7 +125,7 @@ body {
         <h1>
         Log in
         </h1>
-        <form class="text-start mx-auto  mt-5 " style="max-width: 22em;;">
+        <form action="/login" method="post" class="text-start mx-auto  mt-5 " style="max-width: 22em;;">
             <div class="mb-3">
 
                 <label for="exampleInputEmail1" 
@@ -134,7 +134,7 @@ body {
                 <input type="email" 
                 class="form-control" 
                 id="exampleInputEmail1" 
-                aria-describedby="emailHelp">
+                name="email"
                 </div>
 
                 <div class="mb-3">
@@ -143,7 +143,8 @@ body {
                 Password</label>
                 <input type="password" 
                 class="form-control" 
-                id="exampleInputPassword1">
+                id="exampleInputPassword1"
+                name="password"
                 </div>
 
                 <div class="mb-3 form-check">

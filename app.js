@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const mongoose = require("mongoose");
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));//For fetch data from database
 app.set("view engine", "ejs");
 const allRouters = require("./Router/allRouters");
 const addUser = require("./Router/addUser");

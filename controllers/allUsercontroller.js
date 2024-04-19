@@ -1,11 +1,21 @@
 const express = require('express')
 const Customer = require("../models/customerSchema");
+const authUser =require("../models/authUserSchema")
 const moment = require("moment"); // require Moment
+
 
 const user_welcome_get=(req,res) => {
     res.render("welcome")
 }
+const user_signup_post=async (req,res) => {
 
+    try {
+        const result =  await authUser.create(req.body)
+        console.log(result)
+    } catch (error) {
+        console.log(error)
+    }
+}
 const user_login_get=(req,res) => {
     res.render("auth/login")
 }
@@ -93,4 +103,5 @@ module.exports = {
     user_welcome_get,
     user_login_get,
     user_signup_get,
+    user_signup_post,
 };

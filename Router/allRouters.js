@@ -1,6 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const userController=require("../controllers/allUsercontroller")
+const authUser= require("../models/authUserSchema")
+
+
+router.post("/login", async(req,res) => {
+    const login_user = await authUser.findOne({email :req.body.email})
+    console.log(login_user)
+});
+
+router.post("/signup",userController.user_signup_post );
 
 router.get("/",userController.user_welcome_get);
 
