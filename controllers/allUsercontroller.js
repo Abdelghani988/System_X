@@ -7,7 +7,7 @@ const moment = require("moment"); // require Moment
 const user_welcome_get=(req,res) => {
     res.render("welcome")
 }
-const user_signup_post=async (req,res) => {
+const user_signup_post=async(req,res) => {
 
     try {
         const result =  await authUser.create(req.body)
