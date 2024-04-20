@@ -1,7 +1,8 @@
-const express = require('express')
 const Customer = require("../models/customerSchema");
 const authUser =require("../models/authUserSchema")
 const moment = require("moment"); // require Moment
+const bcrypt=require('bcrypt')
+const jwt = require("jsonwebtoken");
 
 
 const user_welcome_get=(req,res) => {
