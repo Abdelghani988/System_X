@@ -12,22 +12,22 @@ const user_signup_post=async(req,res) => {
 
     try {
         const result =  await authUser.create(req.body)
-        console.log(result)
+        res.redirect("/login")
     } catch (error) {
         console.log(error)
     }
 }
 const user_login_post= async(req,res) => {
-    const login_user = await authUser.findOne({email :req.body.email})
+    const login_user = await authUser.findOne({username :req.body.username})
     if(login_user==null){
-        console.log("This email not found in DATABASE")
+        console.log("This username not found in DATABASE")
     }else{
         const match = await bcrypt.compare(req.body.password, login_user.Password)
         if(match){
             const token = jwt.sign({ id: login_user._id }, "Super");
             res.cookie("jwt", token, { httpOnly: true, maxAge: 86400000 });
             res.redirect("/home")
-            console.log("correct email & password")
+            console.log("correct username & password")
         }else{
             console.log("wrong password")
         }
