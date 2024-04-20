@@ -12,11 +12,9 @@ const requireAuth=(req,res,next) => {
             }
         });
     } else {
-        res.redirect("/login")
+        res.redirect("login")
     }
 };
 
-
-
 module.exports = requireAuth
-
+    
