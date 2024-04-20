@@ -6,9 +6,12 @@ app.use(express.urlencoded({ extended: true }));//For fetch data from database
 app.set("view engine", "ejs");
 const allRouters = require("./Router/allRouters");
 const addUser = require("./Router/addUser");
-const methodOverride = require("method-override"); //For used put request
+////For used put request
+const methodOverride = require("method-override"); 
 app.use(methodOverride("_method"));
-
+// for used cookieParser
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
 //Auto refresh
 app.use(express.static("public"));
 const path = require("path");

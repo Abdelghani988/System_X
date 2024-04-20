@@ -16,6 +16,22 @@ const user_signup_post=async(req,res) => {
         console.log(error)
     }
 }
+const user_login_post= async(req,res) => {
+    const login_user = await authUser.findOne({email :req.body.email})
+    if(login_user==null){
+        console.log("This email not found in DATABASE")
+    }else{
+        const match = await bcrypt.compare(req.body.password, login_user.Password)
+        if(match){
+            const token = jwt.sign({ id: login_user._id }, "Super");
+            res.cookie("jwt", token, { httpOnly: true, maxAge: 86400000 });
+            res.redirect("/home")
+            console.log("correct email & password")
+        }else{
+            console.log("wrong password")
+        }
+        }
+}
 const user_login_get=(req,res) => {
     res.render("auth/login")
 }
@@ -104,4 +120,5 @@ module.exports = {
     user_login_get,
     user_signup_get,
     user_signup_post,
+    user_login_post,
 };
