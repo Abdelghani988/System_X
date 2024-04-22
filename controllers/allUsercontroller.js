@@ -17,6 +17,11 @@ const user_signout_get=(req,res) => {
 const user_signup_post=async(req,res) => {
 
     try {
+        const isCurrentEmail = await authUser.findOne({email: req.body.email})
+        console.log(isCurrentEmail)
+        if(isCurrentEmail){
+        return console.log("Email is already exist")
+        }
         const result =  await authUser.create(req.body)
         res.redirect("/login")
     } catch (error) {
