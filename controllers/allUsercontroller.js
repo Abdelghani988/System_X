@@ -1,123 +1,141 @@
 const Customer = require("../models/customerSchema");
-const authUser =require("../models/authUserSchema")
+const authUser = require("../models/authUserSchema");
 const moment = require("moment"); // require Moment
-const bcrypt=require('bcrypt')
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { check, validationResult } = require("express-validator");
 
+const user_signup_post=async(req, res) => {
+  try {
+      // Validate the request body against the defined validation rules
+      const objError = validationResult(req);
+      console.log(objError.errors);
 
+      // Check if there are validation errors
+      if (objError.errors.length > 0) {
+          return console.log("Invalid email or password");
+      }
 
-const user_welcome_get= (req,res) => {
-    res.render("welcome")
+      // Check if the email already exists in the database
+      const isCurrentEmail = await authUser.findOne({ email: req.body.email });
+      console.log(isCurrentEmail);
+      if (isCurrentEmail) {
+          return console.log("Email already exists");
+      }
+
+      // If email is not already in use, create a new user
+      const result = await authUser.create(req.body);
+
+      // Redirect the user to the login page after successful signup
+      res.redirect("/login");
+  } catch (error) {
+      // Handle any errors that occur during the signup process
+      console.log(error);
+  }
 }
-const user_signout_get=(req,res) => {
-    res.cookie("jwt", "", {  maxAge: 1 });
-    res.redirect("/")
-
-}
-const user_signup_post=async(req,res) => {
-
-    try {
-        const isCurrentEmail = await authUser.findOne({email: req.body.email})
-        console.log(isCurrentEmail)
-        if(isCurrentEmail){
-        return console.log("Email is already exist")
-        }
-        const result =  await authUser.create(req.body)
-        res.redirect("/login")
-    } catch (error) {
-        console.log(error)
+const user_welcome_get = (req, res) => {
+res.render("welcome");
+};
+const user_signout_get = (req, res) => {
+    res.cookie("jwt", "", { maxAge: 1 });
+    res.redirect("/");
+};
+const user_login_post = async (req, res) => {
+  const login_user = await authUser.findOne({ username: req.body.username });
+  if (login_user == null) {
+    console.log("This username not found in DATABASE");
+  } else {
+    const match = await bcrypt.compare(req.body.password, login_user.Password);
+    if (match) {
+      const token = jwt.sign({ id: login_user._id }, "Super");
+      res.cookie("jwt", token, { httpOnly: true, maxAge: 86400000 });
+      res.redirect("/home");
+      console.log("correct username & password");
+    } else {
+      console.log("wrong password");
     }
-}
-const user_login_post= async(req,res) => {
-    const login_user = await authUser.findOne({username :req.body.username})
-    if(login_user==null){
-        console.log("This username not found in DATABASE")
-    }else{
-        const match = await bcrypt.compare(req.body.password, login_user.Password)
-        if(match){
-            const token = jwt.sign({ id: login_user._id }, "Super");
-            res.cookie("jwt", token, { httpOnly: true, maxAge: 86400000 });
-            res.redirect("/home")
-            console.log("correct username & password")
-        }else{
-            console.log("wrong password")
-        }
-        }
-}
-const user_login_get=(req,res) => {
-    res.render("auth/login")
-}
-const user_signup_get=(req,res) => {
-    res.render("auth/signup")
-}
-const user_index_get=(req, res) => {
-    Customer.find()
+  }
+};
+const user_login_get = (req, res) => {
+  res.render("auth/login");
+};
+const user_signup_get = (req, res) => {
+  res.render("auth/signup");
+};
+const user_index_get = (req, res) => {
+  Customer.find()
     .then((result) => {
-        res.render("index", { arr: result, moment: moment });}) // Render the Home page after fetching the data
+      res.render("index", { arr: result, moment: moment });
+    }) // Render the Home page after fetching the data
     .catch((error) => {
-        console.log(error);
-        res.render("error", { error: error });
+      console.log(error);
+      res.render("error", { error: error });
     });
-}
-const user_add_post=(req, res) => {
-    Customer.create(req.body)
-        .then(() => {
-        res.redirect("/home");
-        })
-        .catch((error) => {
-        console.log(error);
-    });
-}
-const user_add_get=(req, res) => {
-    res.render("user/add");
-}
-const user_edit_get=(req, res) => {
-    Customer.findById(req.params.id)
-    .then((result) => {
-    res.render("user/edit", { obj: result, moment: moment });
+};
+const user_add_post = (req, res) => {
+  Customer.create(req.body)
+    .then(() => {
+      res.redirect("/home");
     })
     .catch((error) => {
-    console.log(error);
+      console.log(error);
     });
-}
-const user_edit_put=(req, res) => {
-    Customer.updateOne({ _id: req.params.id }, req.body)
+};
+const user_add_get = (req, res) => {
+  res.render("user/add");
+};
+const user_edit_get = (req, res) => {
+  Customer.findById(req.params.id)
+    .then((result) => {
+      res.render("user/edit", { obj: result, moment: moment });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+const user_edit_put = (req, res) => {
+  Customer.updateOne({ _id: req.params.id }, req.body)
     .then((params) => {
-    res.redirect("/home");
+      res.redirect("/home");
     })
     .catch((error) => {
-    console.log(error);
+      console.log(error);
     });
-}
-const user_search_post=(req, res) => {
-    console.log(req.body.searchText)
-    Customer.find({$or: [{ FirstName :req.body.searchText},{ LastName :req.body.searchText}]})
+};
+const user_search_post = (req, res) => {
+  console.log(req.body.searchText);
+  Customer.find({
+    $or: [
+      { FirstName: req.body.searchText },
+      { LastName: req.body.searchText },
+    ],
+  })
     .then((result) => {
-        console.log(result)
-        res.render("user/search",{arr : result});
-        })
-        .catch((error) => {
-        console.log(error)
-        })
-}
-const user_view_get= (req, res) => {
-    Customer.findById(req.params.id)
+      console.log(result);
+      res.render("user/search", { arr: result });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+const user_view_get = (req, res) => {
+  Customer.findById(req.params.id)
     .then((result) => {
       res.render("user/view", { obj: result, moment: moment }); // Render the view page after fetching the data
     })
     .catch((error) => {
-    console.log(error);
+      console.log(error);
     });
-}
-const user_delete=(req, res) => {
-    Customer.deleteOne({ _id: req.params.id })
+};
+const user_delete = (req, res) => {
+  Customer.deleteOne({ _id: req.params.id })
     .then(() => {
-        res.redirect("/home");
+      res.redirect("/home");
     })
     .catch((error) => {
-    console.log(error);
+      console.log(error);
     });
-}
+};
 
 module.exports = {
     user_add_get,
@@ -131,7 +149,7 @@ module.exports = {
     user_welcome_get,
     user_login_get,
     user_signup_get,
-    user_signup_post,
     user_login_post,
-    user_signout_get
+    user_signout_get,
+    user_signup_post,
 };
