@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 8080;
 const mongoose = require("mongoose");
 app.use(express.urlencoded({ extended: true }));//For fetch data from database
 app.set("view engine", "ejs");

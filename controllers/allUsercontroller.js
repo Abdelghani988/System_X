@@ -5,7 +5,8 @@ const bcrypt=require('bcrypt')
 const jwt = require("jsonwebtoken");
 
 
-const user_welcome_get=(req,res) => {
+
+const user_welcome_get= (req,res) => {
     res.render("welcome")
 }
 const user_signup_post=async(req,res) => {
