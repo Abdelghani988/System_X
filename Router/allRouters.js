@@ -1,35 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/allUsercontroller");
-const requireAuth = require("../middleware/middleware");
-const authUser = require("../models/authUserSchema");
-const jwt = require("jsonwebtoken");
+const {requireAuth} = require("../middleware/middleware");
+const {checkIfUser} = require("../middleware/middleware")
 
 
 
-const checkIfUser = (req, res, next) => {
-    const token = req.cookies.jwt;
-    if (token) {
-        //login user
-        jwt.verify(token, "Super", async(error,decoded) => {
-            if(error){
-            res.locals.user=null
-            next();
-            } else {
-            const loginUser=  await authUser.findById(decoded.id)
-            res.locals.user= loginUser
-            next();
-            }
-        });
-    } else{
-        res.locals.user =null;
-        next();
-    }
-};
 router.get("*",checkIfUser)
 
 router.get("/",    
 userController.user_welcome_get
+);
+router.get("/signout",    
+userController.user_signout_get
 );
 
 router.post("/login",

@@ -9,6 +9,11 @@ const jwt = require("jsonwebtoken");
 const user_welcome_get= (req,res) => {
     res.render("welcome")
 }
+const user_signout_get=(req,res) => {
+    res.cookie("jwt", "", {  maxAge: 1 });
+    res.redirect("/")
+
+}
 const user_signup_post=async(req,res) => {
 
     try {
@@ -123,4 +128,5 @@ module.exports = {
     user_signup_get,
     user_signup_post,
     user_login_post,
+    user_signout_get
 };
